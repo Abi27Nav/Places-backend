@@ -1,6 +1,8 @@
 package com.example.loginbackend.Controller;
 
+import com.example.loginbackend.Entity.Category;
 import com.example.loginbackend.Entity.Places;
+import com.example.loginbackend.Services.CategoryService;
 import com.example.loginbackend.Services.PlacesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +14,14 @@ import java.util.List;
 @RequestMapping("/places")
 public class PlacesController {
     private PlacesService placesService;
+    private CategoryService categoryService;
 
-    public PlacesController(PlacesService placesService) {
-        super();
+    public PlacesController(PlacesService placesService, CategoryService categoryService) {
         this.placesService = placesService;
+        this.categoryService = categoryService;
     }
 
-   // <--- create new place
+    // <--- create new place
     @PostMapping()
     public ResponseEntity<Places> savePlaces(@RequestBody Places places){
         return new ResponseEntity<>(placesService.savePlaces(places), HttpStatus.CREATED);
@@ -47,6 +50,40 @@ public class PlacesController {
     public void deletePlaces(@PathVariable("id")int id){
         placesService.deletePlaces(id);
     }
+
+    //<------------------ Category
+
+    @PostMapping(path="/category")
+    public ResponseEntity<Category> saveCategory(@RequestBody Category category){
+        return  new ResponseEntity<>(categoryService.saveCategory(category), HttpStatus.CREATED);
+
+    }
+
+    @GetMapping(path ="/category")
+    public List<Category> getAllCategory(){
+        return categoryService.getAllCategory();
+    }
+
+    @GetMapping(path = "/category/{id}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable("id") int id){
+        return new ResponseEntity<>(categoryService.getCategoryById(id),HttpStatus.FOUND);
+    }
+
+    @PutMapping(path="/category/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") int id,@RequestBody Category category){
+        return new ResponseEntity<>(categoryService.updateCategory(category,id),HttpStatus.OK);
+    }
+    @DeleteMapping(path="/category{id}")
+    public void deleteCategory(@PathVariable("id")int id){
+        categoryService.deleteCategoryById(id);
+    }
+
+
+
+
+
+
+
 
 
 
